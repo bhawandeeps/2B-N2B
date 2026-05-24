@@ -55,6 +55,24 @@ const reorderTask = (e) => {
   list.insertBefore(draggingItem, nextSibling);
 };
 
+const saveReorderedTaskToMemory = (e) => {
+  e.target.classList.remove("dragging");
+
+  const items = list.querySelectorAll(".list-item");
+
+  const reorderedTasks = {};
+
+  for (const item of items) {
+    const taskName = item.querySelector("input").value;
+
+    reorderedTasks[taskName] = tasks[taskName];
+  }
+
+  tasks = reorderedTasks;
+
+  localStorage.setItem("mytasks", JSON.stringify(tasks));
+};
+
 let tasks = window.localStorage.getItem("mytasks")
   ? JSON.parse(window.localStorage.getItem("mytasks"))
   : {};
@@ -64,9 +82,7 @@ list.addEventListener("dragstart", (e) => {
   e.target.classList.add("dragging");
 });
 
-list.addEventListener("dragend", (e) => {
-  e.target.classList.remove("dragging");
-});
+list.addEventListener("dragend", saveReorderedTaskToMemory);
 
 list.addEventListener("dragover", reorderTask);
 
