@@ -7,7 +7,7 @@ const updateList = (_) => {
   let out = "";
   for (t of Object.keys(tasks)) {
     out += `
-    <li>
+    <li class="list-item" draggable="true">
       <label>
         <input type="checkbox"
         ${tasks[t] === "done" ? "checked" : ""}
@@ -42,10 +42,33 @@ const changeTask = (e) => {
   }
 };
 
+const reorderTask = (e) => {
+  e.preventDefault();
+  const draggingItem = document.querySelector(".dragging");
+  const siblings = [...list.querySelectorAll(".list-item:not(.dragging)")];
+
+  const nextSibling = siblings.find((sibling) => {
+    const box = sibling.getBoundingClientRect();
+    return e.clientY <= box.top + box.height / 2;
+  });
+
+  list.insertBefore(draggingItem, nextSibling);
+};
+
 let tasks = window.localStorage.getItem("mytasks")
   ? JSON.parse(window.localStorage.getItem("mytasks"))
   : {};
 updateList(tasks);
+
+list.addEventListener("dragstart", (e) => {
+  e.target.classList.add("dragging");
+});
+
+list.addEventListener("dragend", (e) => {
+  e.target.classList.remove("dragging");
+});
+
+list.addEventListener("dragover", reorderTask);
 
 list.addEventListener("click", changeTask);
 form.addEventListener("submit", addTask);
