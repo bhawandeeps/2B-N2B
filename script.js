@@ -5,23 +5,24 @@ const task = document.querySelector("#task");
 const updateList = (_) => {
   window.localStorage.setItem("mytasks", JSON.stringify(tasks));
   let out = "";
-  for (t of Object.keys(tasks)) {
+  tasks.forEach((t, index) => {
     out += `
-    <li class="list-item" draggable="true">
+    <li class="list-item" draggable="true" data-index=${index}>
       <label>
         <input type="checkbox"
-        ${tasks[t] === "done" ? "checked" : ""}
-        value="${t}"><span>${t}</span>
-        <button data-task="${t}">ｘ</button>
+          data-index="${index}"
+        ${t.status === "done" ? "checked" : ""}
+        value="${t.name}"><span>${t.name}</span>
+        <button data-index="${index}">ｘ</button>
         </label>
     </li>`;
-  }
+  });
   list.innerHTML = out;
 };
 
 const addTask = (e) => {
   if (task.value) {
-    tasks[task.value] = "active";
+    tasks.push({ name: task.value, status: "active" });
     updateList();
     task.value = "";
   }
@@ -30,13 +31,15 @@ const addTask = (e) => {
 
 const changeTask = (e) => {
   let t = e.target;
-  if (t.dataset.task) {
-    delete tasks[t.dataset.task];
+  if (t.nodeName.toLowerCase() === "button") {
+    const index = Number(t.dataset.index);
+    tasks.splice(index, 1);
     updateList();
     e.preventDefault();
   }
   if (t.nodeName.toLowerCase() === "input") {
-    tasks[t.value] = t.checked ? "done" : "active";
+    const index = Number(t.dataset.index);
+    tasks[index].status = t.checked ? "done" : "active";
     updateList();
     e.preventDefault();
   }
@@ -60,23 +63,24 @@ const saveReorderedTaskToMemory = (e) => {
 
   const items = list.querySelectorAll(".list-item");
 
-  const reorderedTasks = {};
+  const reorderedTasks = [];
 
   for (const item of items) {
-    const taskName = item.querySelector("input").value;
+    const index = Number(item.dataset.index);
 
-    reorderedTasks[taskName] = tasks[taskName];
+    reorderedTasks.push(tasks[index]);
   }
 
   tasks = reorderedTasks;
-
-  localStorage.setItem("mytasks", JSON.stringify(tasks));
+  updateList();
 };
 
-let tasks = window.localStorage.getItem("mytasks")
-  ? JSON.parse(window.localStorage.getItem("mytasks"))
-  : {};
+//initialize tasks as an array
+let tasks = JSON.parse(localStorage.getItem("mytasks") || "[]");
 updateList(tasks);
+console.log(tasks);
+console.log(typeof tasks);
+console.log(Array.isArray(tasks));
 
 list.addEventListener("dragstart", (e) => {
   e.target.classList.add("dragging");
