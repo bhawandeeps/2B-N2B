@@ -7,14 +7,17 @@ const updateList = (_) => {
   let out = "";
   tasks.forEach((t, index) => {
     out += `
-    <li class="list-item" draggable="true" data-index=${index}>
-      <label>
-        <input type="checkbox"
+   <li class="list-item" draggable="true" data-index=${index}>
+      <div>
+        <input id="task" type="checkbox"
           data-index="${index}"
         ${t.status === "done" ? "checked" : ""}
-        value="${t.name}"><span>${t.name}</span>
+        value="${t.name}">
+      </div>
+      <div>
+        <span class="ck-tname">${t.name}</span>
         <button data-index="${index}">ｘ</button>
-        </label>
+        </div>
     </li>`;
   });
   list.innerHTML = out;
@@ -37,7 +40,7 @@ const changeTask = (e) => {
     updateList();
     e.preventDefault();
   }
-  if (t.nodeName.toLowerCase() === "input") {
+  if (t.type === "checkbox") {
     const index = Number(t.dataset.index);
     tasks[index].status = t.checked ? "done" : "active";
     updateList();
@@ -45,6 +48,7 @@ const changeTask = (e) => {
   }
 };
 
+//reorder
 const reorderTask = (e) => {
   e.preventDefault();
   const draggingItem = document.querySelector(".dragging");
@@ -75,13 +79,41 @@ const saveReorderedTaskToMemory = (e) => {
   updateList();
 };
 
+//change name
+const renameTask = (e) => {
+  const t = e.target;
+
+  if (t.tagName !== "SPAN") {
+    return;
+  }
+
+  const oldContent = t.textContent;
+  const index = Number(t.closest(".list-item").dataset.index);
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = oldContent;
+  t.replaceWith(input);
+  input.focus();
+
+  const saveValue = (_) => {
+    tasks[index].name = input.value || oldContent;
+    updateList();
+  };
+
+  input.addEventListener("blur", saveValue);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      input.blur();
+    }
+  });
+};
+
 //initialize tasks as an array
 let tasks = JSON.parse(localStorage.getItem("mytasks") || "[]");
 updateList(tasks);
-console.log(tasks);
-console.log(typeof tasks);
-console.log(Array.isArray(tasks));
 
+//dragging events
 list.addEventListener("dragstart", (e) => {
   e.target.classList.add("dragging");
 });
@@ -90,5 +122,7 @@ list.addEventListener("dragend", saveReorderedTaskToMemory);
 
 list.addEventListener("dragover", reorderTask);
 
+//click events
 list.addEventListener("click", changeTask);
+list.addEventListener("dblclick", renameTask);
 form.addEventListener("submit", addTask);
