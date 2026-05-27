@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Cabin:ital,wght@0,400..700;1,400..700&display=swap");
+
+body {
+    font-family: "Amatic SC", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 20px;
+}
+
+input[type="text"] {
+    font-family: "Amatic SC", sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.app {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.logo-container img {
+    width: 25vw;
+    height: auto;
+    margin: 7vh;
+}
+
+.searchbar {
+    display: flex;
+    border: 2px solid #222;
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    padding: 20px;
+    background: transparent;
+}
+
+#task {
+    border: 1px solid transparent;
+    outline: none;
+}
+
+#submit-btn {
+    background: transparent;
+    border: none;
+}
