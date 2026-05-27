@@ -33,6 +33,18 @@ input[type="text"] {
     background: transparent;
 }
 
+.list-item {
+    display: flex;
+    padding-bottom: 10px;
+    margin-right: 20px;
+}
+
+.to-do-name,
+.to-do-ck,
+.to-do-del {
+    padding-right: 10px;
+}
+
 #task {
     border: 1px solid transparent;
     outline: none;

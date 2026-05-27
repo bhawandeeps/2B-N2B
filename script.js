@@ -8,14 +8,18 @@ const updateList = (_) => {
   tasks.forEach((t, index) => {
     out += `
    <li class="list-item" draggable="true" data-index=${index}>
-      <div>
+      <div class="to-do-ck">
         <input id="task" type="checkbox"
           data-index="${index}"
         ${t.status === "done" ? "checked" : ""}
         value="${t.name}">
       </div>
-      <div>
+      <div class="to-do-name" style="
+      ${t.status === "done" ? "text-decoration: line-through;" : ""}
+      ">
         <span class="ck-tname">${t.name}</span>
+        </div>
+      <div class="to-do-del">
         <button data-index="${index}">ｘ</button>
         </div>
     </li>`;
