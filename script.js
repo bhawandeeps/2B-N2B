@@ -8,19 +8,45 @@ const updateList = (_) => {
   tasks.forEach((t, index) => {
     out += `
    <li class="list-item" draggable="true" data-index=${index}>
-      <div class="to-do-ck">
-        <input id="task" type="checkbox"
-          data-index="${index}"
-        ${t.status === "done" ? "checked" : ""}
-        value="${t.name}">
-      </div>
+   <div class="to-do-ck">
+       <div class="checkbox-wrapper-61">
+         <input
+           type="checkbox"
+           class="check"
+           id="check-${index}"
+           data-index="${index}"
+           ${t.status === "done" ? "checked" : ""}
+         />
+         <label for="check-${index}" class="label">
+           <svg width="25" height="25" viewBox="0 0 95 95">
+             <circle
+               cx="50"
+               cy="50"
+               r="30"
+               stroke="black"
+               stroke-width="4"
+               fill="none"
+             />
+             <g transform="translate(0,-952.36222)">
+               <path
+                 d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
+                 stroke="black"
+                 stroke-width="4"
+                 fill="none"
+                 class="path1"
+               />
+             </g>
+           </svg>
+         </label>
+       </div>
+     </div>
       <div class="to-do-name" style="
-      ${t.status === "done" ? "text-decoration: line-through;" : ""}
+      ${t.status === "done" ? "text-decoration: line-through; text-decoration-thickness: 2px;" : " "}
       ">
         <span class="ck-tname">${t.name}</span>
         </div>
       <div class="to-do-del">
-        <button data-index="${index}">ｘ</button>
+        <button data-index="${index}"><img src="images/fishbone.svg" width="20" height="20"></button>
         </div>
     </li>`;
   });
